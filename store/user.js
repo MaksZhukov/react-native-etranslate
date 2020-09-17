@@ -1,4 +1,6 @@
 import { action, observable } from "mobx";
+import { Toast } from "native-base";
+import AsyncStorage from "@react-native-community/async-storage";
 import apiUser from "../api/user";
 import { DEFAULT_API_RESPONSE } from "../config";
 import { setItemsToLocalStorage } from "../helpers";
@@ -47,6 +49,11 @@ class UserStore {
                 });
                 this.setUser(data);
             }
+            Toast.show({
+                text: data.message,
+                type: data.status,
+                textStyle: { textAlign: "center" },
+            });
             this.signInResponse = {
                 ...this.signInResponse,
                 loading: false,
@@ -57,6 +64,11 @@ class UserStore {
                 loading: false,
             };
         }
+    }
+    async logOut(navigation) {
+        await AsyncStorage.clear();
+        this.setUser({ email: null, id: null });
+        navigation.navigate("SignIn");
     }
 
     setUser = ({ email, id }) => {

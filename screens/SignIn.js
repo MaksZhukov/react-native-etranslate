@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useLayoutEffect, useState } from "react";
+import { Button as NativeButton } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import { inject, observer } from "mobx-react";
 import {
@@ -19,6 +20,30 @@ import apiUser from "../api/user";
 import { setItemsToLocalStorage } from "../helpers";
 
 const SignIn = ({ user, navigation }) => {
+    let [email, setEmail] = useState("");
+    let [password, setPassword] = useState("");
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerLeft: null,
+            headerRight: () => (
+                <Button
+                    onPress={() => {
+                        navigation.navigate("SignUp");
+                    }}>
+                    <Text>Go to SignUp</Text>
+                </Button>
+            ),
+        });
+    }, [navigation]);
+    navigation.setOptions({
+        headerRight: () => (
+            <Button
+                onPress={() => setCount((c) => c + 1)}
+                title="Update count"
+            />
+        ),
+    });
     const handlePressSignInWith = (site) => async () => {
         let redirectUrl = await Linking.getInitialURL();
         let authUrl = `${api.defaults.baseURL}/auth/${site}`;
@@ -32,7 +57,6 @@ const SignIn = ({ user, navigation }) => {
             } = Linking.parse(authResult.url);
             setItemsToLocalStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
-            console.log(user.checkTokenResponse);
             navigation.navigate("Welcome");
         } catch (err) {
             console.log("ERROR:", err);
@@ -42,12 +66,26 @@ const SignIn = ({ user, navigation }) => {
         <Container>
             <Form>
                 <Item>
-                    <Input placeholder="Username" />
+                    <Input
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholder="Email"
+                    />
                 </Item>
                 <Item last>
-                    <Input secureTextEntry placeholder="Password" />
+                    <Input
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        placeholder="Password"
+                    />
                 </Item>
-                <Button primary block>
+                <Button
+                    onPress={() => {
+                        user.signIn(email, password);
+                    }}
+                    primary
+                    block>
                     <Text>Sign In</Text>
                 </Button>
             </Form>
