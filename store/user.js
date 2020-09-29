@@ -65,10 +65,10 @@ class UserStore {
             };
         }
     }
-    async logOut(navigation) {
+    @action
+    async logOut() {
         await AsyncStorage.clear();
         this.setUser({ email: null, id: null });
-        navigation.navigate("SignIn");
     }
 
     setUser = ({ email, id }) => {

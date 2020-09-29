@@ -41,7 +41,6 @@ const SignUp = ({ navigation }) => {
             } = Linking.parse(authResult.url);
             setItemsToLocalStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
-            console.log(user.checkTokenResponse);
             navigation.navigate("Welcome");
         } catch (err) {
             console.log("ERROR:", err);

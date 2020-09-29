@@ -1,8 +1,13 @@
 import React, { useLayoutEffect } from "react";
 import { inject, observer } from "mobx-react";
-import { Container, Text, Button, Header } from "native-base";
+import { Container, Text, Button } from "native-base";
 
 const Welcome = ({ user, navigation }) => {
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerLeft: null,
+        });
+    }, [navigation]);
     return (
         <Container>
             <Text>{user.id}</Text>
