@@ -1,15 +1,16 @@
-import { action, observable } from "mobx";
-import { Toast } from "native-base";
-import AsyncStorage from "@react-native-community/async-storage";
-import apiUser from "../api/user";
-import { DEFAULT_API_RESPONSE } from "../config";
-import { setItemsToLocalStorage } from "../helpers";
+import { action, observable } from 'mobx';
+import { Toast } from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
+import apiUser from '../api/user';
+import { DEFAULT_API_RESPONSE } from '../config';
+import { setItemsToAsyncStorage } from '../helpers';
 
 class UserStore {
     @observable email = null;
     @observable id = null;
 
     @observable checkTokenResponse = DEFAULT_API_RESPONSE;
+    @observable updateTokenResponse = DEFAULT_API_RESPONSE;
     @observable signInResponse = DEFAULT_API_RESPONSE;
 
     @action
@@ -33,6 +34,27 @@ class UserStore {
         }
     }
     @action
+    async updateTokens() {
+        try {
+            this.updateTokenResponse = {
+                ...this.updateTokenResponse,
+                loading: true,
+            };
+            const { data } = await apiUser.updateTokens();
+            setItemsToAsyncStorage(data);
+            this.updateTokenResponse = {
+                ...this.updateTokenResponse,
+                loading: false,
+            };
+        } catch (err) {
+            this.updateTokenResponse = {
+                ...this.updateTokenResponse,
+                err,
+                loading: false,
+            };
+        }
+    }
+    @action
     async signIn(email, password) {
         try {
             this.signInResponse = {
@@ -40,9 +62,9 @@ class UserStore {
                 loading: true,
             };
             let { data } = await apiUser.signIn({ email, password });
-            if (data.status === "success") {
+            if (data.status === 'success') {
                 const { accessToken, refreshToken, expiresIn } = data;
-                setItemsToLocalStorage({
+                setItemsToAsyncStorage({
                     accessToken,
                     refreshToken,
                     expiresIn,
@@ -52,7 +74,7 @@ class UserStore {
             Toast.show({
                 text: data.message,
                 type: data.status,
-                textStyle: { textAlign: "center" },
+                textStyle: { textAlign: 'center' },
             });
             this.signInResponse = {
                 ...this.signInResponse,

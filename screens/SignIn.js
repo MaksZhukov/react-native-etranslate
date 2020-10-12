@@ -1,7 +1,7 @@
-import React, { useLayoutEffect, useState } from "react";
-import { Button as NativeButton } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
-import { inject, observer } from "mobx-react";
+import React, { useLayoutEffect, useState } from 'react';
+import { Button as NativeButton } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import { inject, observer } from 'mobx-react';
 import {
     Container,
     Text,
@@ -12,16 +12,16 @@ import {
     Icon,
     View,
     Content,
-} from "native-base";
-import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
-import api from "../api";
-import apiUser from "../api/user";
-import { setItemsToLocalStorage } from "../helpers";
+} from 'native-base';
+import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
+import api from '../api';
+import apiUser from '../api/user';
+import { setItemsToAsyncStorage } from '../helpers';
 
 const SignIn = ({ user, navigation }) => {
-    let [email, setEmail] = useState("");
-    let [password, setPassword] = useState("");
+    let [email, setEmail] = useState('');
+    let [password, setPassword] = useState('');
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -29,7 +29,7 @@ const SignIn = ({ user, navigation }) => {
             headerRight: () => (
                 <Button
                     onPress={() => {
-                        navigation.navigate("SignUp");
+                        navigation.navigate('SignUp');
                     }}>
                     <Text>Go to SignUp</Text>
                 </Button>
@@ -40,7 +40,7 @@ const SignIn = ({ user, navigation }) => {
         headerRight: () => (
             <Button
                 onPress={() => setCount((c) => c + 1)}
-                title="Update count"
+                title='Update count'
             />
         ),
     });
@@ -55,11 +55,11 @@ const SignIn = ({ user, navigation }) => {
             let {
                 queryParams: { accessToken, expiresIn, refreshToken },
             } = Linking.parse(authResult.url);
-            setItemsToLocalStorage({ accessToken, expiresIn, refreshToken });
+            setItemsToAsyncStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
-            navigation.navigate("Welcome");
+            navigation.navigate('Translator');
         } catch (err) {
-            console.log("ERROR:", err);
+            console.log('ERROR:', err);
         }
     };
     return (
@@ -69,7 +69,7 @@ const SignIn = ({ user, navigation }) => {
                     <Input
                         value={email}
                         onChangeText={setEmail}
-                        placeholder="Email"
+                        placeholder='Email'
                     />
                 </Item>
                 <Item last>
@@ -77,7 +77,7 @@ const SignIn = ({ user, navigation }) => {
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
-                        placeholder="Password"
+                        placeholder='Password'
                     />
                 </Item>
                 <Button
@@ -91,32 +91,32 @@ const SignIn = ({ user, navigation }) => {
             </Form>
             <View
                 style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     marginTop: 20,
                 }}>
                 <Text style={{ margin: 5 }}>Sign in with</Text>
                 <Button
-                    onPress={handlePressSignInWith("google")}
+                    onPress={handlePressSignInWith('google')}
                     style={{ margin: 5 }}
                     rounded
                     transparent
                     bordered>
-                    <Icon name="logo-google" />
+                    <Icon name='logo-google' />
                 </Button>
                 <Button
-                    onPress={handlePressSignInWith("yandex")}
+                    onPress={handlePressSignInWith('yandex')}
                     style={{ margin: 5 }}
                     rounded
                     transparent
                     bordered>
-                    <Icon name="logo-yen" />
+                    <Icon name='logo-yen' />
                 </Button>
             </View>
         </Container>
     );
 };
 
-export default inject("user")(observer(SignIn));
+export default inject('user')(observer(SignIn));

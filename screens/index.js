@@ -1,46 +1,71 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { inject, observer } from "mobx-react";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
-import Welcome from "./Welcome";
-import Translator from "./Translator";
-import Root from "./Root";
-import Header from "../layouts/Header";
+import React, { useRef, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { inject, observer } from 'mobx-react';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import Translator from './Translator';
+import Root from './Root';
+import Dictionary from './Dictionary';
+import Header from '../layouts/Header';
+import Info from './Info';
 
 const Stack = createStackNavigator();
 
 const Screens = (prop) => {
+    const [offsetScrollX, setOffsetScrollX] = useState(0);
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={"Root"}>
-                {<Stack.Screen name="Root" component={Root} />}
+            <Stack.Navigator initialRouteName={'Root'}>
+                {<Stack.Screen name='Root' component={Root} />}
                 {!prop.user.id && (
-                    <Stack.Screen name="SignIn" component={SignIn} />
+                    <Stack.Screen name='SignIn' component={SignIn} />
                 )}
                 {!prop.user.id && (
-                    <Stack.Screen name="SignUp" component={SignUp} />
+                    <Stack.Screen name='SignUp' component={SignUp} />
                 )}
                 {prop.user.id && (
                     <Stack.Screen
-                        name="Welcome"
-                        component={Welcome}
+                        name='Translator'
                         options={{
-                            header: (props) => <Header {...props}></Header>,
-                        }}></Stack.Screen>
+                            header: (props) => (
+                                <Header
+                                    offsetScrollX={offsetScrollX}
+                                    setOffsetScrollX={setOffsetScrollX}
+                                    {...props}></Header>
+                            ),
+                        }}
+                        component={Translator}></Stack.Screen>
                 )}
                 {prop.user.id && (
                     <Stack.Screen
-                        name="Translator"
-                        component={Translator}
+                        name='Dictionary'
                         options={{
-                            header: (props) => <Header {...props}></Header>,
-                        }}></Stack.Screen>
+                            header: (props) => (
+                                <Header
+                                    offsetScrollX={offsetScrollX}
+                                    setOffsetScrollX={setOffsetScrollX}
+                                    {...props}></Header>
+                            ),
+                        }}
+                        component={Dictionary}></Stack.Screen>
+                )}
+                {prop.user.id && (
+                    <Stack.Screen
+                        name='Info'
+                        options={{
+                            header: (props) => (
+                                <Header
+                                    offsetScrollX={offsetScrollX}
+                                    setOffsetScrollX={setOffsetScrollX}
+                                    {...props}></Header>
+                            ),
+                        }}
+                        component={Info}></Stack.Screen>
                 )}
             </Stack.Navigator>
         </NavigationContainer>
     );
 };
 
-export default inject("user")(observer(Screens));
+export default inject('user')(observer(Screens));

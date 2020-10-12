@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useState } from "react";
-import { TextInput } from "react-native";
+import React, { useLayoutEffect, useState } from 'react';
+import { TextInput } from 'react-native';
 import {
     Container,
     Text,
@@ -10,18 +10,18 @@ import {
     Icon,
     View,
     Content,
-} from "native-base";
+} from 'native-base';
 
 const SignUp = ({ navigation }) => {
-    let [email, setEmail] = useState("");
-    let [password, setPassword] = useState("");
+    let [email, setEmail] = useState('');
+    let [password, setPassword] = useState('');
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: null,
             headerRight: () => (
                 <Button
                     onPress={() => {
-                        navigation.navigate("SignIn");
+                        navigation.navigate('SignIn');
                     }}>
                     <Text>Go to SignIn</Text>
                 </Button>
@@ -39,11 +39,11 @@ const SignUp = ({ navigation }) => {
             let {
                 queryParams: { accessToken, expiresIn, refreshToken },
             } = Linking.parse(authResult.url);
-            setItemsToLocalStorage({ accessToken, expiresIn, refreshToken });
+            setItemsToAsyncStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
-            navigation.navigate("Welcome");
+            navigation.navigate('Translator');
         } catch (err) {
-            console.log("ERROR:", err);
+            console.log('ERROR:', err);
         }
     };
     return (
@@ -53,7 +53,7 @@ const SignUp = ({ navigation }) => {
                     <Input
                         value={email}
                         onChangeText={setEmail}
-                        placeholder="Email"
+                        placeholder='Email'
                     />
                 </Item>
                 <Item last>
@@ -61,7 +61,7 @@ const SignUp = ({ navigation }) => {
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
-                        placeholder="Password"
+                        placeholder='Password'
                     />
                 </Item>
                 <Button
@@ -75,28 +75,28 @@ const SignUp = ({ navigation }) => {
             </Form>
             <View
                 style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     marginTop: 20,
                 }}>
                 <Text style={{ margin: 5 }}>Sign up with</Text>
                 <Button
-                    onPress={handlePressSignInWith("google")}
+                    onPress={handlePressSignInWith('google')}
                     style={{ margin: 5 }}
                     rounded
                     transparent
                     bordered>
-                    <Icon name="logo-google" />
+                    <Icon name='logo-google' />
                 </Button>
                 <Button
-                    onPress={handlePressSignInWith("yandex")}
+                    onPress={handlePressSignInWith('yandex')}
                     style={{ margin: 5 }}
                     rounded
                     transparent
                     bordered>
-                    <Icon name="logo-yen" />
+                    <Icon name='logo-yen' />
                 </Button>
             </View>
         </Container>

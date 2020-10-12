@@ -1,22 +1,25 @@
-import AsyncStorage from "@react-native-community/async-storage";
-import api from "./index";
+import AsyncStorage from '@react-native-community/async-storage';
+import api from './index';
 
-const checkToken = async (accessToken) =>
+const checkToken = async () => await api.post('check-token');
+
+const signIn = (data) => api.post('sign-in', data);
+
+const updateTokens = async () =>
     api.post(
-        "check-token",
+        'update-tokens',
         {},
         {
             headers: {
                 Authorization: `Bearer ${await AsyncStorage.getItem(
-                    "accessToken"
+                    'refreshToken'
                 )}`,
             },
         }
     );
 
-const signIn = (data) => api.post("sign-in", data);
-
 export default {
     checkToken,
+    updateTokens,
     signIn,
 };
