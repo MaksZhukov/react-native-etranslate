@@ -1,22 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Container, Form, Input, Item, Textarea, View } from 'native-base';
+import { Container, Form, Input, Item, Textarea, Picker } from 'native-base';
 import apiTranslator from '../api/translator';
 import { debounce } from '../helpers';
+import { LANGUAGES } from '../constants';
 
 const Translator = ({ user, navigation }) => {
     let [text, setText] = useState('');
+    let [selectedTextLang, setSelectedTextLang] = useState(LANGUAGES[0].abbr);
+    let [selectedTranslateLang, setSelectedTranslateLang] = useState(
+        LANGUAGES[1].abbr
+    );
     let [loading, setLoading] = useState(false);
     let [translation, setTranslation] = useState('');
-    const translate = async (text) => {
+    const translate = async (text, textLang, translateLang) => {
         if (!text) {
             setTranslation('');
             setLoading(false);
             return;
         }
         const response = await apiTranslator.translate({
-            textLang: 'en',
-            translateLang: 'ru',
+            textLang,
+            translateLang,
             text,
         });
         setTranslation(response.data);
@@ -26,19 +31,46 @@ const Translator = ({ user, navigation }) => {
     const handleChangeText = (e) => {
         setLoading(true);
         setText(e);
-        debouncedTranslate(e);
+        debouncedTranslate(e, selectedTextLang, selectedTranslateLang);
     };
 
     return (
         <Container>
-            <Item>
-                <Input
-                    value={text}
-                    onChangeText={handleChangeText}
-                    placeholder='Текст'
-                />
-            </Item>
+            <Picker
+                note
+                style={{
+                    width: '50%',
+                    height: 1,
+                }}
+                onValueChange={setSelectedTextLang}
+                selectedValue={selectedTextLang}
+                mode='dropdown'>
+                {LANGUAGES.map((item) => (
+                    <Picker.Item
+                        label={item.name}
+                        value={item.abbr}></Picker.Item>
+                ))}
+            </Picker>
             <Textarea
+                style={{ flex: 4 }}
+                value={text}
+                onChangeText={handleChangeText}
+                bordered
+                placeholder={'Текст'}></Textarea>
+            <Picker
+                note
+                style={{ width: '50%', height: 1 }}
+                onValueChange={setSelectedTranslateLang}
+                selectedValue={selectedTranslateLang}
+                mode='dropdown'>
+                {LANGUAGES.map((item) => (
+                    <Picker.Item
+                        label={item.name}
+                        value={item.abbr}></Picker.Item>
+                ))}
+            </Picker>
+            <Textarea
+                style={{ flex: 4 }}
                 value={loading ? `${translation}...` : translation}
                 bordered
                 disabled

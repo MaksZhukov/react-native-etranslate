@@ -1,7 +1,7 @@
 export const LANGUAGES = [
     { name: 'Русский', abbr: 'ru' },
-    { name: 'Китайский', abbr: 'zh' },
     { name: 'Английский', abbr: 'en' },
+    { name: 'Китайский', abbr: 'zh' },
     { name: 'Германский', abbr: 'de' },
     { name: 'Французский', abbr: 'fr' },
     { name: 'Датский', abbr: 'da' },
