@@ -1,6 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Container, Form, Input, Item, Textarea, Picker } from 'native-base';
+import {
+    Container,
+    Form,
+    Input,
+    Button,
+    Item,
+    Icon,
+    Textarea,
+    Picker,
+} from 'native-base';
+import * as Speech from 'expo-speech';
 import apiTranslator from '../api/translator';
 import { debounce } from '../helpers';
 import { LANGUAGES } from '../constants';
@@ -32,6 +42,11 @@ const Translator = ({ user, navigation }) => {
         setLoading(true);
         setText(e);
         debouncedTranslate(e, selectedTextLang, selectedTranslateLang);
+    };
+    const handlePressPronounce = async () => {
+        Speech.speak(translation, { language: selectedTranslateLang });
+        let res = await Speech.getAvailableVoicesAsync();
+        console.log(res);
     };
 
     return (
@@ -69,6 +84,14 @@ const Translator = ({ user, navigation }) => {
                         value={item.abbr}></Picker.Item>
                 ))}
             </Picker>
+            <Button
+                onPress={handlePressPronounce}
+                style={{ margin: 5 }}
+                rounded
+                transparent
+                bordered>
+                <Icon name='volume-high' />
+            </Button>
             <Textarea
                 style={{ flex: 4 }}
                 value={loading ? `${translation}...` : translation}

@@ -4,7 +4,8 @@
     "slug": "react-native-etranslate",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+	"icon": "./assets/icon.png",
+	"scheme": "e-translate",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -23,6 +24,9 @@
       "favicon": "./assets/favicon.png"
     },
     "description": "",
-    "githubUrl": "https://github.com/MaksZhukov/react-native-etranslate"
+    "githubUrl": "https://github.com/MaksZhukov/react-native-etranslate",
+    "android": {
+      "package": "com.maksimzhukau.reactnativeetranslate"
+    }
   }
 }

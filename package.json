@@ -5,22 +5,23 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-	"eject": "expo eject",
-	"react-devtools": "react-devtools"
+    "eject": "expo eject",
+    "react-devtools": "react-devtools"
   },
   "dependencies": {
-    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-proposal-decorators": "^7.12.1",
     "@react-native-community/async-storage": "~1.11.0",
     "@react-native-community/masked-view": "0.1.10",
-    "@react-navigation/native": "^5.7.3",
-    "@react-navigation/stack": "^5.9.0",
+    "@react-navigation/native": "^5.7.6",
+    "@react-navigation/stack": "^5.9.3",
     "axios": "^0.20.0",
     "expo": "~38.0.8",
     "expo-font": "~8.2.1",
+    "expo-speech": "~8.2.1",
     "expo-status-bar": "^1.0.2",
     "expo-web-browser": "~8.3.1",
-    "mobx": "^5.15.6",
-    "mobx-react": "^6.3.0",
+    "mobx": "^5.15.7",
+    "mobx-react": "^6.3.1",
     "native-base": "^2.13.14",
     "react": "~16.11.0",
     "react-devtools": "^4.8.2",
@@ -33,7 +34,7 @@
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.6",
+    "@babel/core": "^7.12.3",
     "babel-preset-expo": "~8.1.0"
   },
   "private": true

@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { inject, observer } from 'mobx-react';
+import * as Linking from 'expo-linking';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Translator from './Translator';
@@ -10,12 +11,17 @@ import Dictionary from './Dictionary';
 import Header from '../layouts/Header';
 import Info from './Info';
 
+const prefix = Linking.makeUrl('/');
+
 const Stack = createStackNavigator();
 
 const Screens = (prop) => {
+    const linking = {
+        prefixes: [prefix],
+    };
     const [offsetScrollX, setOffsetScrollX] = useState(0);
     return (
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
             <Stack.Navigator initialRouteName={'Root'}>
                 {<Stack.Screen name='Root' component={Root} />}
                 {!prop.user.id && (

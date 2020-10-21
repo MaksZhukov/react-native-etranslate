@@ -46,7 +46,7 @@ const SignIn = ({ user, navigation }) => {
     });
     const handlePressSignInWith = (site) => async () => {
         let redirectUrl = await Linking.getInitialURL();
-        let authUrl = `${api.defaults.baseURL}/auth/${site}`;
+        let authUrl = `${api.defaults.baseURL}/auth/${site}?redirectTo=${redirectUrl}`;
         try {
             let authResult = await WebBrowser.openAuthSessionAsync(
                 authUrl,
