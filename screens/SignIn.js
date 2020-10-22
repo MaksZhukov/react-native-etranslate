@@ -17,6 +17,7 @@ import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import api from '../api';
 import apiUser from '../api/user';
+import i18n from '../locale';
 import { setItemsToAsyncStorage } from '../helpers';
 
 const SignIn = ({ user, navigation }) => {
@@ -31,19 +32,11 @@ const SignIn = ({ user, navigation }) => {
                     onPress={() => {
                         navigation.navigate('SignUp');
                     }}>
-                    <Text>Go to SignUp</Text>
+                    <Text>{i18n.t('goToSignUp')}</Text>
                 </Button>
             ),
         });
     }, [navigation]);
-    navigation.setOptions({
-        headerRight: () => (
-            <Button
-                onPress={() => setCount((c) => c + 1)}
-                title='Update count'
-            />
-        ),
-    });
     const handlePressSignInWith = (site) => async () => {
         let redirectUrl = await Linking.getInitialURL();
         let authUrl = `${api.defaults.baseURL}/auth/${site}?redirectTo=${redirectUrl}`;
@@ -69,7 +62,7 @@ const SignIn = ({ user, navigation }) => {
                     <Input
                         value={email}
                         onChangeText={setEmail}
-                        placeholder='Email'
+                        placeholder={i18n.t('email')}
                     />
                 </Item>
                 <Item last>
@@ -77,7 +70,7 @@ const SignIn = ({ user, navigation }) => {
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
-                        placeholder='Password'
+                        placeholder={i18n.t('password')}
                     />
                 </Item>
                 <Button
@@ -86,18 +79,19 @@ const SignIn = ({ user, navigation }) => {
                     }}
                     primary
                     block>
-                    <Text>Sign In</Text>
+                    <Text>{i18n.t('signIn')}</Text>
                 </Button>
             </Form>
+            <Text style={{ margin: 5, textAlign: 'center' }}>
+                {i18n.t('signInWith')}:
+            </Text>
             <View
                 style={{
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: 20,
                 }}>
-                <Text style={{ margin: 5 }}>Sign in with</Text>
                 <Button
                     onPress={handlePressSignInWith('google')}
                     style={{ margin: 5 }}

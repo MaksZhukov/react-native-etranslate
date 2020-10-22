@@ -2,12 +2,15 @@ import { action, observable } from 'mobx';
 import { Toast } from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import apiUser from '../api/user';
+import * as Localization from 'expo-localization';
+import i18n from '../locale';
 import { DEFAULT_API_RESPONSE } from '../config';
 import { setItemsToAsyncStorage } from '../helpers';
 
 class UserStore {
     @observable email = null;
     @observable id = null;
+    @observable locale = Localization.locale;
 
     @observable checkTokenResponse = DEFAULT_API_RESPONSE;
     @observable updateTokenResponse = DEFAULT_API_RESPONSE;
@@ -92,6 +95,17 @@ class UserStore {
         await AsyncStorage.clear();
         this.setUser({ email: null, id: null });
     }
+    @action
+    async setLocaleDefault() {
+        let locale =
+            (await AsyncStorage.getItem('locale')) || Localization.locale;
+        this.setLocale(locale);
+    }
+    setLocale = async (locale) => {
+        this.locale = locale;
+        i18n.locale = locale;
+        AsyncStorage.setItem('locale', locale);
+    };
 
     setUser = ({ email, id }) => {
         this.email = email;

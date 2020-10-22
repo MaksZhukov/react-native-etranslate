@@ -11,6 +11,7 @@ import {
     View,
     Content,
 } from 'native-base';
+import i18n from '../locale';
 
 const SignUp = ({ navigation }) => {
     let [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ const SignUp = ({ navigation }) => {
                     onPress={() => {
                         navigation.navigate('SignIn');
                     }}>
-                    <Text>Go to SignIn</Text>
+                    <Text>{i18n.t('goToSignIn')}</Text>
                 </Button>
             ),
         });
@@ -53,7 +54,7 @@ const SignUp = ({ navigation }) => {
                     <Input
                         value={email}
                         onChangeText={setEmail}
-                        placeholder='Email'
+                        placeholder={i18n.t('email')}
                     />
                 </Item>
                 <Item last>
@@ -61,7 +62,7 @@ const SignUp = ({ navigation }) => {
                         value={password}
                         onChangeText={setPassword}
                         secureTextEntry
-                        placeholder='Password'
+                        placeholder={i18n.t('password')}
                     />
                 </Item>
                 <Button
@@ -70,18 +71,19 @@ const SignUp = ({ navigation }) => {
                     }}
                     primary
                     block>
-                    <Text>Sign up</Text>
+                    <Text>{i18n.t('signUp')}</Text>
                 </Button>
             </Form>
+            <Text style={{ margin: 5, textAlign: 'center' }}>
+                {i18n.t('signUpWith')}:
+            </Text>
             <View
                 style={{
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: 20,
                 }}>
-                <Text style={{ margin: 5 }}>Sign up with</Text>
                 <Button
                     onPress={handlePressSignInWith('google')}
                     style={{ margin: 5 }}

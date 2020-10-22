@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Provider } from "mobx-react";
-import { Root } from "native-base";
-import * as Font from "expo-font";
-import { AppLoading } from "expo";
-import store from "./store";
-import Screens from "./screens";
+import React, { useState, useEffect } from 'react';
+import { Provider } from 'mobx-react';
+import { Root } from 'native-base';
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
+import store from './store';
+import Screens from './screens';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -12,8 +12,8 @@ function App() {
     useEffect(() => {
         let fetchFonts = async () => {
             await Font.loadAsync({
-                Roboto: require("native-base/Fonts/Roboto.ttf"),
-                Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+                Roboto: require('native-base/Fonts/Roboto.ttf'),
+                Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
             });
             setLoading(false);
         };

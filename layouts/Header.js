@@ -2,12 +2,20 @@ import { inject, observer } from 'mobx-react';
 import { ScrollView } from 'react-native';
 import { Button, Text, Header as NativeBaseHeader, Icon } from 'native-base';
 import React, { useEffect, useRef, useState } from 'react';
+import i18n from '../locale';
 
-const Header = ({ navigation, user, setOffsetScrollX, offsetScrollX }) => {
-    useEffect(() => {
-        scrollViewRef.current.scrollTo({ x: offsetScrollX });
-    }, [offsetScrollX]);
+const Header = ({
+    navigation,
+    user: { locale, logOut },
+    setOffsetScrollX,
+    offsetScrollX,
+}) => {
     const scrollViewRef = useRef(null);
+    useEffect(() => {
+        setTimeout(() => {
+            scrollViewRef.current.scrollTo({ x: offsetScrollX });
+        }, 0);
+    }, [offsetScrollX]);
     return (
         <NativeBaseHeader>
             <ScrollView
@@ -20,23 +28,29 @@ const Header = ({ navigation, user, setOffsetScrollX, offsetScrollX }) => {
                     onPress={() => {
                         navigation.navigate('Dictionary');
                     }}>
-                    <Text>Dictionary</Text>
+                    <Text>{i18n.t('dictionary')}</Text>
                 </Button>
                 <Button
                     onPress={() => {
                         navigation.navigate('Info');
                     }}>
-                    <Text>Info</Text>
+                    <Text>{i18n.t('info')}</Text>
                 </Button>
                 <Button
                     onPress={() => {
                         navigation.navigate('Translator');
                     }}>
-                    <Text>Translator</Text>
+                    <Text>{i18n.t('translator')}</Text>
+                </Button>
+                <Button
+                    onPress={() => {
+                        navigation.navigate('Settings');
+                    }}>
+                    <Icon name='settings'></Icon>
                 </Button>
                 <Button
                     onPress={async () => {
-                        await user.logOut();
+                        await logOut();
                         navigation.navigate('SignIn');
                     }}>
                     <Icon type='MaterialIcons' name='exit-to-app'></Icon>

@@ -1,4 +1,6 @@
-import user from "./user";
+import user from './user';
+
+user.setLocaleDefault();
 
 export default {
     user,
