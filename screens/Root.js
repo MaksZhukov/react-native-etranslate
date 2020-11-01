@@ -4,7 +4,7 @@ import { checkItemsInAsyncStorage } from '../helpers';
 import AsyncStorage from '@react-native-community/async-storage';
 import { TIME_OFFSET_EXPIRES_IN } from '../constants';
 
-const Root = ({ user, navigation }) => {
+const Root = ({ user, navigation, userDictionary }) => {
     useEffect(() => {
         let checkToken = async () => {
             await user.checkToken();
@@ -24,12 +24,14 @@ const Root = ({ user, navigation }) => {
                     if (user.id === null) {
                         navigation.navigate('SignIn');
                     } else {
+                        userDictionary.getUserDictionaryItems();
                         navigation.navigate('Translator');
                     }
                 } else {
                     navigation.navigate('SignIn');
                 }
             } else {
+                userDictionary.getUserDictionaryItems();
                 navigation.navigate('Translator');
             }
         };
@@ -44,4 +46,4 @@ const Root = ({ user, navigation }) => {
     return null;
 };
 
-export default inject('user')(observer(Root));
+export default inject('user', 'userDictionary')(observer(Root));

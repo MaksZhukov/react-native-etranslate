@@ -1,8 +1,8 @@
-import React, { useLayoutEffect } from "react";
-import { inject, observer } from "mobx-react";
-import { Container, Text, Button } from "native-base";
+import React, { useLayoutEffect } from 'react';
+import { inject, observer } from 'mobx-react';
+import { Container, Text, Button } from 'native-base';
 
-const Dictionary = ({ user, navigation }) => {
+const Dictionary = ({ user, userDictionary: { items }, navigation }) => {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: null,
@@ -10,9 +10,14 @@ const Dictionary = ({ user, navigation }) => {
     }, [navigation]);
     return (
         <Container>
-            <Text>Dictionary</Text>
+            {items.map((item) => (
+                <>
+                    <Text>{item.text}</Text>
+                    <Text>{item.translate}</Text>
+                </>
+            ))}
         </Container>
     );
 };
 
-export default inject("user")(observer(Dictionary));
+export default inject('user', 'userDictionary')(observer(Dictionary));

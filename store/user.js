@@ -18,7 +18,8 @@ class UserStore {
     @observable updateTokenResponse = DEFAULT_API_RESPONSE;
     @observable signInResponse = DEFAULT_API_RESPONSE;
 
-    constructor() {
+    constructor(root) {
+        this.setLocaleDefault();
         NetInfo.addEventListener((state) => {
             if (state.isConnected && !this.isNetworkConnected) {
                 Toast.show({
@@ -135,4 +136,4 @@ class UserStore {
     };
 }
 
-export default new UserStore();
+export default UserStore;

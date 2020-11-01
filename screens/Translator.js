@@ -42,7 +42,6 @@ const Translator = ({ user: { locale }, navigation }) => {
     let [availableVoices, setAvailableVoices] = useState([]);
     let [isRecording, setIsRecording] = useState(false);
     const recording = useRef(null);
-    console.log(availableVoices.length);
     useEffect(() => {
         const fetchAvailableVoices = async () => {
             await Speech.getAvailableVoicesAsync();

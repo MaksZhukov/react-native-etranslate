@@ -1,7 +1,11 @@
-import user from './user';
+import User from './user';
+import UserDictionary from './userDictionary';
 
-user.setLocaleDefault();
+class RootStore {
+    constructor() {
+        this.user = new User(this);
+        this.userDictionary = new UserDictionary(this);
+    }
+}
 
-export default {
-    user,
-};
+export default new RootStore();
