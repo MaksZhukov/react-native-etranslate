@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx';
 import { Toast } from 'native-base';
+import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-community/async-storage';
 import apiUser from '../api/user';
 import * as Localization from 'expo-localization';
@@ -11,10 +12,31 @@ class UserStore {
     @observable email = null;
     @observable id = null;
     @observable locale = Localization.locale;
+    isNetworkConnected = true;
 
     @observable checkTokenResponse = DEFAULT_API_RESPONSE;
     @observable updateTokenResponse = DEFAULT_API_RESPONSE;
     @observable signInResponse = DEFAULT_API_RESPONSE;
+
+    constructor() {
+        NetInfo.addEventListener((state) => {
+            if (state.isConnected && !this.isNetworkConnected) {
+                Toast.show({
+                    text: i18n.t('online'),
+                    type: 'success',
+                    textStyle: { textAlign: 'center' },
+                });
+            }
+            if (!state.isConnected) {
+                Toast.show({
+                    text: i18n.t('offline'),
+                    textStyle: { textAlign: 'center' },
+                    duration: 999999,
+                });
+            }
+            this.isNetworkConnected = state.isConnected;
+        });
+    }
 
     @action
     async checkToken() {

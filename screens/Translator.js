@@ -42,14 +42,20 @@ const Translator = ({ user: { locale }, navigation }) => {
     let [availableVoices, setAvailableVoices] = useState([]);
     let [isRecording, setIsRecording] = useState(false);
     const recording = useRef(null);
-
+    console.log(availableVoices.length);
     useEffect(() => {
         const fetchAvailableVoices = async () => {
-            let res = await Speech.getAvailableVoicesAsync();
-            let languages = res.filter((item) =>
-                LANGUAGES.some((el) => item.language.includes(el.abbr))
-            );
-            setAvailableVoices(languages);
+            await Speech.getAvailableVoicesAsync();
+            // A little hack to get voices, because they doesn't come the first time
+            setTimeout(async () => {
+                let res = await Speech.getAvailableVoicesAsync();
+                let languages = LANGUAGES.map((el) =>
+                    res.find((item) =>
+                        item.language.toLowerCase().includes(el.abbr)
+                    )
+                );
+                setAvailableVoices(languages);
+            }, 0);
         };
         fetchAvailableVoices();
     }, []);

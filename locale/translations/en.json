@@ -28,5 +28,7 @@
 	"danish": "Danish",
 	"spanish": "Spanish",
 	"latvian": "Latvian",
-	"polish": "Polish"
+	"polish": "Polish",
+	"offline": "offline",
+	"online": "online"
 }

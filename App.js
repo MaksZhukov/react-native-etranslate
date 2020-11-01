@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Provider } from 'mobx-react';
-import { Root } from 'native-base';
+import { Root, Toast } from 'native-base';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import store from './store';
