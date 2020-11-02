@@ -31,7 +31,7 @@ const recordingOptions = {
     },
 };
 
-const Translator = ({ user: { locale }, navigation }) => {
+const Translator = ({ user: { locale }, navigation, userDictionary }) => {
     let [text, setText] = useState('');
     let [selectedTextLang, setSelectedTextLang] = useState(LANGUAGES[1].abbr);
     let [selectedTranslateLang, setSelectedTranslateLang] = useState(
@@ -42,6 +42,13 @@ const Translator = ({ user: { locale }, navigation }) => {
     let [availableVoices, setAvailableVoices] = useState([]);
     let [isRecording, setIsRecording] = useState(false);
     const recording = useRef(null);
+    let userDirectoryItemByCurrentTranslation = userDictionary.items.find(
+        (item) =>
+            item.text === text &&
+            item.translate === translation &&
+            item.textLang === selectedTextLang &&
+            item.translateLang === selectedTranslateLang
+    );
     useEffect(() => {
         const fetchAvailableVoices = async () => {
             await Speech.getAvailableVoicesAsync();
@@ -107,7 +114,6 @@ const Translator = ({ user: { locale }, navigation }) => {
             formData.append('translateLang', selectedTranslateLang);
             const { data } = await apiTranslator.speechToText(formData);
             FileSystem.deleteAsync(uri);
-            console.log(data);
         } catch (error) {
             console.log('getRecording transcription', error);
         }
@@ -163,6 +169,20 @@ const Translator = ({ user: { locale }, navigation }) => {
     const handleTranslateValuePickerChange = (val) => {
         setSelectedTranslateLang(val);
         setSelectedTextLang(selectedTranslateLang);
+    };
+    const handlePressFavorite = () => {
+        if (userDirectoryItemByCurrentTranslation) {
+            userDictionary.removeFromUserDictionary([
+                userDirectoryItemByCurrentTranslation.id,
+            ]);
+        } else {
+            userDictionary.addToUserDictionary({
+                text,
+                translate: translation,
+                textLang: selectedTextLang,
+                translateLang: selectedTranslateLang,
+            });
+        }
     };
 
     return (
@@ -228,6 +248,26 @@ const Translator = ({ user: { locale }, navigation }) => {
                     ))}
                 </Picker>
                 <Button
+                    style={{ margin: 5 }}
+                    onPress={handlePressFavorite}
+                    rounded
+                    transparent
+                    bordered
+                    disabled={!text || loading}>
+                    <Icon
+                        name={
+                            userDirectoryItemByCurrentTranslation
+                                ? 'star'
+                                : 'star-outline'
+                        }
+                        style={
+                            userDirectoryItemByCurrentTranslation
+                                ? { color: 'orange' }
+                                : null
+                        }
+                    />
+                </Button>
+                <Button
                     onPress={handlePressPronounce(
                         translation,
                         selectedTranslateLang
@@ -250,4 +290,4 @@ const Translator = ({ user: { locale }, navigation }) => {
     );
 };
 
-export default inject('user')(observer(Translator));
+export default inject('user', 'userDictionary')(observer(Translator));

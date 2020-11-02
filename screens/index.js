@@ -21,7 +21,6 @@ const Screens = (prop) => {
         prefixes: [prefix],
     };
     const [offsetScrollX, setOffsetScrollX] = useState(0);
-    // console.log(offsetScrollX);
 
     const header = useMemo(
         () => (props) => (

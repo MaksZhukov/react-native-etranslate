@@ -30,5 +30,7 @@
 	"latvian": "Латвийский",
 	"polish": "Польский",
 	"offline": "не в сети",
-	"online": "в сети"
+	"online": "в сети",
+	"removeFromUserDictionary": "Удалено с пользовательского словаря",
+	"addToUserDictionary": "Добавлено в словарь пользователя"
 }

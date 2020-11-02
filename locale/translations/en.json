@@ -30,5 +30,7 @@
 	"latvian": "Latvian",
 	"polish": "Polish",
 	"offline": "offline",
-	"online": "online"
+	"online": "online",
+	"removeFromUserDictionary": "Remove from user dictionary",
+	"addToUserDictionary": "Add to user dictionary"
 }
