@@ -1,5 +1,6 @@
 import api from './index';
-const translate = (query) => api(`translate`, { params: query });
+const translate = (query) =>
+    api(`translate`, { params: query, cache: { exclude: { query: false } } });
 const speechToText = (data) =>
     api.post(`speech`, data, {
         headers: {
