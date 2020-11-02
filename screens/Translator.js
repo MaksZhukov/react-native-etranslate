@@ -164,11 +164,15 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
 
     const handleTextValuePickerChange = (val) => {
         setSelectedTextLang(val);
-        setSelectedTranslateLang(selectedTextLang);
+        if (val === selectedTranslateLang) {
+            setSelectedTranslateLang(selectedTextLang);
+        }
     };
     const handleTranslateValuePickerChange = (val) => {
         setSelectedTranslateLang(val);
-        setSelectedTextLang(selectedTranslateLang);
+        if (val === selectedTextLang) {
+            setSelectedTextLang(selectedTranslateLang);
+        }
     };
     const handlePressFavorite = () => {
         if (userDirectoryItemByCurrentTranslation) {
