@@ -32,5 +32,12 @@
 	"offline": "не в сети",
 	"online": "в сети",
 	"removeFromUserDictionary": "Удалено с пользовательского словаря",
-	"addToUserDictionary": "Добавлено в словарь пользователя"
+	"addToUserDictionary": "Добавлено в словарь пользователя",
+	"pushNotificationsFromDictionary": "Пуш нотификации со словаря",
+	"updatedPushSettings": "Обновлены настройки пуш уведомлений",
+	"languageForText": "Язык текста",
+	"languageForTranslate": "Язык для перевода",
+	"Days": "Дни",
+	"Hours": "Часы",
+	"Minutes": "Минуты"
 }

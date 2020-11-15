@@ -32,5 +32,12 @@
 	"offline": "offline",
 	"online": "online",
 	"removeFromUserDictionary": "Remove from user dictionary",
-	"addToUserDictionary": "Add to user dictionary"
+	"addToUserDictionary": "Add to user dictionary",
+	"pushNotificationsFromDictionary": "Push notifications from dictionary",
+	"updatedPushSettings": "Updated push notifications settings",
+	"languageForText": "Language for text",
+	"languageForTranslate": "Language for translate",
+	"Days": "Days",
+	"Hours": "Hours",
+	"Minutes": "Minutes"
 }

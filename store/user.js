@@ -7,11 +7,20 @@ import * as Localization from 'expo-localization';
 import i18n from '../locale';
 import { DEFAULT_API_RESPONSE } from '../config';
 import { setItemsToAsyncStorage } from '../helpers';
+import { LANGUAGES } from '../constants';
 
 class UserStore {
     @observable email = null;
     @observable id = null;
     @observable locale = Localization.locale;
+    @observable isActivePushNotifications = false;
+    @observable pushNotificationsTextLang = LANGUAGES[0].abbr;
+    @observable pushNotificationsTranslateLang = LANGUAGES[1].abbr;
+    @observable dateForNotifications = {
+        days: '0',
+        hours: '0',
+        minutes: '0',
+    };
     isNetworkConnected = true;
 
     @observable checkTokenResponse = DEFAULT_API_RESPONSE;
@@ -19,7 +28,7 @@ class UserStore {
     @observable signInResponse = DEFAULT_API_RESPONSE;
 
     constructor(root) {
-        this.setLocaleDefault();
+        this.setDefaultFromAsyncStorage();
         NetInfo.addEventListener((state) => {
             if (state.isConnected && !this.isNetworkConnected) {
                 Toast.show({
@@ -119,16 +128,70 @@ class UserStore {
         this.setUser({ email: null, id: null });
     }
     @action
-    async setLocaleDefault() {
-        let locale =
-            (await AsyncStorage.getItem('locale')) || Localization.locale;
-        this.setLocale(locale);
+    async setIsActivePushNotificationsDefault() {
+        let value =
+            JSON.parse(
+                await AsyncStorage.getItem('isActivePushNotifications')
+            ) || false;
+
+        this.setIsActivePushNotifications(value);
+    }
+    async setDefaultFromAsyncStorage() {
+        let [
+            [, pushNotificationsTextLang],
+            [, pushNotificationsTranslateLang],
+            [, date],
+            [, isActivePushNotifications],
+            [, locale],
+        ] = await AsyncStorage.multiGet([
+            'pushNotificationsTextLang',
+            'pushNotificationsTranslateLang',
+            'dateForNotifications',
+            'isActivePushNotifications',
+            'locale',
+        ]);
+
+        this.setPushNotificationsTextLang(
+            pushNotificationsTextLang || LANGUAGES[0].abbr
+        );
+        this.setPushNotificationsTranslateLang(
+            pushNotificationsTranslateLang || LANGUAGES[1].abbr
+        );
+        this.setDateForNotifications(
+            JSON.parse(date) || {
+                days: '0',
+                hours: '0',
+                minutes: '0',
+            }
+        );
+        this.setIsActivePushNotifications(
+            JSON.parse(isActivePushNotifications) || false
+        );
+        this.setLocale(locale || Localization.locale);
+    }
+    setDateForNotifications(data) {
+        this.dateForNotifications = data;
+        AsyncStorage.setItem('dateForNotifications', JSON.stringify(data));
+    }
+    setIsActivePushNotifications(value) {
+        this.isActivePushNotifications = value;
+        AsyncStorage.setItem('isActivePushNotifications', value.toString());
     }
     setLocale = async (locale) => {
         this.locale = locale;
         i18n.locale = locale;
         AsyncStorage.setItem('locale', locale);
     };
+
+    setPushNotificationsTextLang(lang) {
+        this.pushNotificationsTextLang = lang;
+        AsyncStorage.setItem('pushNotificationsTextLang', lang);
+    }
+
+    setPushNotificationsTranslateLang(lang) {
+        this.pushNotificationsTranslateLang = lang;
+        AsyncStorage.setItem('pushNotificationsTranslateLang', lang);
+    }
 
     setUser = ({ email, id }) => {
         this.email = email;

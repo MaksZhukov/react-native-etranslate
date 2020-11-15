@@ -26,6 +26,7 @@
     "description": "",
     "githubUrl": "https://github.com/MaksZhukov/react-native-etranslate",
     "android": {
+	  "useNextNotificationsApi": true,
       "package": "com.maksimzhukau.reactnativeetranslate"
     }
   }

@@ -25,14 +25,14 @@ const Root = ({ user, navigation, userDictionary }) => {
                         navigation.navigate('SignIn');
                     } else {
                         userDictionary.getUserDictionaryItems();
-                        navigation.navigate('Translator');
+                        navigation.navigate('Settings');
                     }
                 } else {
                     navigation.navigate('SignIn');
                 }
             } else {
                 userDictionary.getUserDictionaryItems();
-                navigation.navigate('Translator');
+                navigation.navigate('Settings');
             }
         };
         checkToken();
