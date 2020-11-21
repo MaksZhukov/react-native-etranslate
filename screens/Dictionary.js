@@ -1,6 +1,16 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Container, Text, Accordion, View, Icon } from 'native-base';
+import {
+    Container,
+    Text,
+    Accordion,
+    View,
+    Icon,
+    Input,
+    Picker,
+} from 'native-base';
+import i18n from '../locale';
+import { LANGUAGES, NONE_LANGUAGE } from '../constants';
 
 const Dictionary = ({
     user,
@@ -12,11 +22,75 @@ const Dictionary = ({
             headerLeft: null,
         });
     }, [navigation]);
-    const dataArray = items.map((item) => ({
-        id: item.id,
-        title: `${item.textLang} | ${item.text} | ${item.translateLang}`,
-        content: item.translate,
-    }));
+    const [searchTerm, setSearchTerm] = useState('');
+    let [selectedTextLang, setSelectedTextLang] = useState(NONE_LANGUAGE.abbr);
+    let [selectedTranslateLang, setSelectedTranslateLang] = useState(
+        NONE_LANGUAGE.abbr
+    );
+
+    const renderPickerItems = [NONE_LANGUAGE, ...LANGUAGES].map((item) => (
+        <Picker.Item
+            key={item.abbr}
+            label={i18n.t(item.name)}
+            value={item.abbr}></Picker.Item>
+    ));
+
+    const mapItemsToDataArray = (array) =>
+        array.map((item) => ({
+            id: item.id,
+            title: `${item.textLang} | ${item.text} | ${item.translateLang}`,
+            content: item.translate,
+        }));
+    const getDataArray = () => {
+        let newItems = items;
+        if (searchTerm) {
+            let filteredSearchTerm = searchTerm.toLowerCase();
+            newItems = newItems.filter(
+                ({ text, textLang, translate, translateLang }) =>
+                    text.toLowerCase().includes(filteredSearchTerm) ||
+                    textLang.toLowerCase().includes(filteredSearchTerm) ||
+                    translate.toLowerCase().includes(filteredSearchTerm) ||
+                    translateLang.toLowerCase().includes(filteredSearchTerm)
+            );
+        }
+        if (selectedTextLang !== NONE_LANGUAGE.abbr) {
+            newItems = newItems.filter(
+                ({ textLang }) => textLang === selectedTextLang
+            );
+        }
+        if (selectedTranslateLang !== NONE_LANGUAGE.abbr) {
+            newItems = newItems.filter(
+                ({ translateLang }) => translateLang === selectedTranslateLang
+            );
+        }
+        return mapItemsToDataArray(newItems);
+    };
+    const dataArray = getDataArray();
+
+    const renderFilterContent = (item) => {
+        return (
+            <View>
+                <Input
+                    onChangeText={setSearchTerm}
+                    value={searchTerm}
+                    placeholder={i18n.t('Search')}></Input>
+                <Picker
+                    note
+                    onValueChange={setSelectedTextLang}
+                    selectedValue={selectedTextLang}
+                    mode='dropdown'>
+                    {renderPickerItems}
+                </Picker>
+                <Picker
+                    note
+                    onValueChange={setSelectedTranslateLang}
+                    selectedValue={selectedTranslateLang}
+                    mode='dropdown'>
+                    {renderPickerItems}
+                </Picker>
+            </View>
+        );
+    };
 
     const renderHeader = (item, expanded) => {
         return (
@@ -40,12 +114,21 @@ const Dictionary = ({
     };
     return (
         <Container>
-            <Accordion
-                icon='add'
-                expandedIcon='remove'
-                dataArray={dataArray}
-                renderHeader={renderHeader}
-            />
+            <View>
+                <Accordion
+                    renderContent={renderFilterContent}
+                    dataArray={[
+                        {
+                            title: i18n.t('Filter'),
+                        },
+                    ]}></Accordion>
+                <Accordion
+                    icon='add'
+                    expandedIcon='remove'
+                    dataArray={dataArray}
+                    renderHeader={renderHeader}
+                />
+            </View>
         </Container>
     );
 };

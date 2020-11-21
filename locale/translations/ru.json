@@ -39,5 +39,7 @@
 	"languageForTranslate": "Язык для перевода",
 	"Days": "Дни",
 	"Hours": "Часы",
-	"Minutes": "Минуты"
+	"Minutes": "Минуты",
+	"Filter": "Фильтр",
+	"Search": "Поиск"
 }

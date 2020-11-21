@@ -1,5 +1,3 @@
-import i18n from '../locale';
-
 export const LANGUAGES = [
     { name: 'russian', abbr: 'ru' },
     { name: 'english', abbr: 'en' },
@@ -11,5 +9,10 @@ export const LANGUAGES = [
     { name: 'latvian', abbr: 'lv' },
     { name: 'polish', abbr: 'pl' },
 ];
+
+export const NONE_LANGUAGE = {
+    name: 'none',
+    abbr: 'none',
+};
 
 export const TIME_OFFSET_EXPIRES_IN = 10000;

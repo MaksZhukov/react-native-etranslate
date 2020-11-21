@@ -39,5 +39,7 @@
 	"languageForTranslate": "Language for translate",
 	"Days": "Days",
 	"Hours": "Hours",
-	"Minutes": "Minutes"
+	"Minutes": "Minutes",
+	"Filter": "Filter",
+	"Search": "Search"
 }
