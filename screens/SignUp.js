@@ -68,7 +68,7 @@ const SignUp = ({ navigation }) => {
                 </Item>
                 <Button
                     onPress={() => {
-                        user.signIn(email, password);
+                        user.signUp(email, password);
                     }}
                     primary
                     block>

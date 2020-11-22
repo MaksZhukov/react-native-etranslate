@@ -26,6 +26,7 @@ class UserStore {
     @observable checkTokenResponse = DEFAULT_API_RESPONSE;
     @observable updateTokenResponse = DEFAULT_API_RESPONSE;
     @observable signInResponse = DEFAULT_API_RESPONSE;
+    @observable signUpResponse = DEFAULT_API_RESPONSE;
 
     constructor(root) {
         this.setDefaultFromAsyncStorage();
@@ -117,6 +118,30 @@ class UserStore {
             };
         } catch (err) {
             this.signInResponse = {
+                err,
+                loading: false,
+            };
+        }
+    }
+    @action
+    async signUp(email, password) {
+        try {
+            this.signUpResponse = {
+                ...this.signUpResponse,
+                loading: true,
+            };
+            let { data } = await apiUser.signUp({ email, password });
+            Toast.show({
+                text: data.message,
+                type: data.status,
+                textStyle: { textAlign: 'center' },
+            });
+            this.signUpResponse = {
+                ...this.signUpResponse,
+                loading: false,
+            };
+        } catch (err) {
+            this.signUpResponse = {
                 err,
                 loading: false,
             };

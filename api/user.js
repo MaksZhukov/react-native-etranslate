@@ -4,6 +4,7 @@ import api from './index';
 const checkToken = async () => await api.post('check-token');
 
 const signIn = (data) => api.post('sign-in', data);
+const signUp = (data) => api.post('sign-up', data);
 
 const updateTokens = async () =>
     api.post(
@@ -22,4 +23,5 @@ export default {
     checkToken,
     updateTokens,
     signIn,
+    signUp,
 };
