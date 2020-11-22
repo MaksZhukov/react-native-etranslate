@@ -8,6 +8,8 @@ import {
     Icon,
     Input,
     Picker,
+    Item,
+    Label,
 } from 'native-base';
 import i18n from '../locale';
 import { LANGUAGES, NONE_LANGUAGE } from '../constants';
@@ -27,7 +29,6 @@ const Dictionary = ({
     let [selectedTranslateLang, setSelectedTranslateLang] = useState(
         NONE_LANGUAGE.abbr
     );
-
     const renderPickerItems = [NONE_LANGUAGE, ...LANGUAGES].map((item) => (
         <Picker.Item
             key={item.abbr}
@@ -71,23 +72,36 @@ const Dictionary = ({
         return (
             <View>
                 <Input
+                    style={{ marginHorizontal: 10 }}
                     onChangeText={setSearchTerm}
                     value={searchTerm}
                     placeholder={i18n.t('Search')}></Input>
-                <Picker
-                    note
-                    onValueChange={setSelectedTextLang}
-                    selectedValue={selectedTextLang}
-                    mode='dropdown'>
-                    {renderPickerItems}
-                </Picker>
-                <Picker
-                    note
-                    onValueChange={setSelectedTranslateLang}
-                    selectedValue={selectedTranslateLang}
-                    mode='dropdown'>
-                    {renderPickerItems}
-                </Picker>
+                <Item style={{ paddingHorizontal: 15 }}>
+                    <Label style={{ width: '50%' }}>
+                        {i18n.t('languageForText')}
+                    </Label>
+                    <Picker
+                        style={{ width: '50%' }}
+                        note
+                        onValueChange={setSelectedTextLang}
+                        selectedValue={selectedTextLang}
+                        mode='dropdown'>
+                        {renderPickerItems}
+                    </Picker>
+                </Item>
+                <Item style={{ paddingHorizontal: 15 }}>
+                    <Label style={{ width: '50%' }}>
+                        {i18n.t('languageForTranslate')}
+                    </Label>
+                    <Picker
+                        style={{ width: '50%' }}
+                        note
+                        onValueChange={setSelectedTranslateLang}
+                        selectedValue={selectedTranslateLang}
+                        mode='dropdown'>
+                        {renderPickerItems}
+                    </Picker>
+                </Item>
             </View>
         );
     };

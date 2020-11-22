@@ -186,7 +186,9 @@ const Settings = ({ user, navigation }) => {
                 />
             </Item>
             <Item>
-                <Label>{i18n.t('languageForText')}</Label>
+                <Label style={{ width: '50%' }}>
+                    {i18n.t('languageForText')}
+                </Label>
                 <Picker
                     note
                     onValueChange={handleChangePushNotificationsTextLang}
@@ -201,7 +203,9 @@ const Settings = ({ user, navigation }) => {
                 </Picker>
             </Item>
             <Item>
-                <Label>{i18n.t('languageForTranslate')}</Label>
+                <Label style={{ width: '50%' }}>
+                    {i18n.t('languageForTranslate')}
+                </Label>
                 <Picker
                     note
                     onValueChange={handleChangePushNotificationsTranslateLang}

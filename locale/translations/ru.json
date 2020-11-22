@@ -43,5 +43,6 @@
 	"Filter": "Фильтр",
 	"Search": "Поиск",
 	"Registration": "Регистрация",
-	"Authorization": "Авторизация"
+	"Authorization": "Авторизация",
+	"none": "Не выбрано"
 }

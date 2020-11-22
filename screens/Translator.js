@@ -189,6 +189,13 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
         }
     };
 
+    const renderPickerItems = LANGUAGES.map((item) => (
+        <Picker.Item
+            key={item.abbr}
+            label={i18n.t(item.name)}
+            value={item.abbr}></Picker.Item>
+    ));
+
     return (
         <Container>
             <View style={{ flexDirection: 'row' }}>
@@ -200,12 +207,7 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
                     onValueChange={handleTextValuePickerChange}
                     selectedValue={selectedTextLang}
                     mode='dropdown'>
-                    {LANGUAGES.map((item) => (
-                        <Picker.Item
-                            key={item.abbr}
-                            label={i18n.t(item.name)}
-                            value={item.abbr}></Picker.Item>
-                    ))}
+                    {renderPickerItems}
                 </Picker>
                 <Button
                     disabled={!text}
@@ -244,12 +246,7 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
                     onValueChange={handleTranslateValuePickerChange}
                     selectedValue={selectedTranslateLang}
                     mode='dropdown'>
-                    {LANGUAGES.map((item) => (
-                        <Picker.Item
-                            key={item.abbr}
-                            label={i18n.t(item.name)}
-                            value={item.abbr}></Picker.Item>
-                    ))}
+                    {renderPickerItems}
                 </Picker>
                 <Button
                     style={{ margin: 5 }}
