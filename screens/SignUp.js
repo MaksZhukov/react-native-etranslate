@@ -18,6 +18,7 @@ const SignUp = ({ navigation }) => {
     let [password, setPassword] = useState('');
     useLayoutEffect(() => {
         navigation.setOptions({
+            title: i18n.t('Registration'),
             headerLeft: null,
             headerRight: () => (
                 <Button

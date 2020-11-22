@@ -41,5 +41,7 @@
 	"Hours": "Hours",
 	"Minutes": "Minutes",
 	"Filter": "Filter",
-	"Search": "Search"
+	"Search": "Search",
+	"Registration": "Registration",
+	"Authorization": "Authorization"
 }

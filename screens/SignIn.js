@@ -26,6 +26,7 @@ const SignIn = ({ user, navigation }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
+            title: i18n.t('Authorization'),
             headerLeft: null,
             headerRight: () => (
                 <Button

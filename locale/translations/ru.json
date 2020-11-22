@@ -41,5 +41,7 @@
 	"Hours": "Часы",
 	"Minutes": "Минуты",
 	"Filter": "Фильтр",
-	"Search": "Поиск"
+	"Search": "Поиск",
+	"Registration": "Регистрация",
+	"Authorization": "Авторизация"
 }

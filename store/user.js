@@ -123,10 +123,14 @@ class UserStore {
         }
     }
     @action
-    async logOut() {
-        await AsyncStorage.clear();
+    logOut = async () => {
+        await AsyncStorage.multiRemove([
+            'accessToken',
+            'refreshToken',
+            'expiresIn',
+        ]);
         this.setUser({ email: null, id: null });
-    }
+    };
     @action
     async setIsActivePushNotificationsDefault() {
         let value =
@@ -193,10 +197,10 @@ class UserStore {
         AsyncStorage.setItem('pushNotificationsTranslateLang', lang);
     }
 
-    setUser = ({ email, id }) => {
+    setUser({ email, id }) {
         this.email = email;
         this.id = id;
-    };
+    }
 }
 
 export default UserStore;
