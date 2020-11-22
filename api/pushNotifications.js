@@ -15,7 +15,7 @@ const registerPushNotifications = (
         userID,
     });
 const unregisterPushNotifications = (userID) =>
-    api.delete('push-notification', { userID });
+    api.delete(`push-notification/${userID}`);
 
 export default {
     registerPushNotifications,
