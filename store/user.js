@@ -7,7 +7,7 @@ import * as Localization from 'expo-localization';
 import i18n from '../locale';
 import { DEFAULT_API_RESPONSE } from '../config';
 import { setItemsToAsyncStorage } from '../helpers';
-import { LANGUAGES } from '../constants';
+import { BACKEND_MESSAGES_DICTIONARY, LANGUAGES } from '../constants';
 
 class UserStore {
     @observable email = null;
@@ -47,6 +47,7 @@ class UserStore {
             }
             this.isNetworkConnected = state.isConnected;
         });
+        this.root = root;
     }
 
     @action
@@ -108,7 +109,7 @@ class UserStore {
                 this.setUser(data);
             }
             Toast.show({
-                text: data.message,
+                text: i18n.t(BACKEND_MESSAGES_DICTIONARY[data.message]),
                 type: data.status,
                 textStyle: { textAlign: 'center' },
             });
@@ -116,6 +117,7 @@ class UserStore {
                 ...this.signInResponse,
                 loading: false,
             };
+            this.root.navigation.navigate('Translator');
         } catch (err) {
             this.signInResponse = {
                 err,
@@ -132,7 +134,7 @@ class UserStore {
             };
             let { data } = await apiUser.signUp({ email, password });
             Toast.show({
-                text: data.message,
+                text: i18n.t(BACKEND_MESSAGES_DICTIONARY[data.message]),
                 type: data.status,
                 textStyle: { textAlign: 'center' },
             });

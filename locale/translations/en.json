@@ -44,5 +44,10 @@
 	"Search": "Search",
 	"Registration": "Registration",
 	"Authorization": "Authorization",
-	"none": "Не выбрано"
+	"none": "Not chosen",
+	"userIsExist": "user has already exists",
+	"userIsn'tExist": "user hasn't been found",
+	"confirmEmail": "confirm your email",
+	"emailIsn'tVerify": "email hasn't been verify",
+	"entrySuccess": "entry success"
 }

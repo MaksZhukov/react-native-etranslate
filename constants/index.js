@@ -15,4 +15,12 @@ export const NONE_LANGUAGE = {
     abbr: 'none',
 };
 
+export const BACKEND_MESSAGES_DICTIONARY = {
+    'Пользователь уже существует': 'userIsExist',
+    'Пользователь не найден': "userIsn'tExist",
+    'Подтвердите вашу почту': 'confirmEmail',
+    'Почта не была верифицирована': "emailIsn'tVerify",
+    'Успешный вход': 'entrySuccess',
+};
+
 export const TIME_OFFSET_EXPIRES_IN = 10000;

@@ -9,11 +9,12 @@ import apiTranslator from '../api/translator';
 import i18n from '../locale';
 import { debounce } from '../helpers';
 import { LANGUAGES } from '../constants';
+import { RECORDING_OPTIONS_PRESET_HIGH_QUALITY } from 'expo-av/build/Audio';
 
 const recordingOptions = {
     android: {
-        extension: '.mp4',
-        outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+        extension: '.webm',
+        outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_WEBM,
         audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
         sampleRate: 44100,
         numberOfChannels: 1,
@@ -61,7 +62,7 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
                     )
                 );
                 setAvailableVoices(languages);
-            }, 0);
+            }, 100);
         };
         fetchAvailableVoices();
     }, []);
@@ -93,9 +94,9 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
         setText(e);
     };
     const handlePressPronounce = (text, language) => async () => {
-        let objectVoice = availableVoices.find((item) =>
-            item.language.toLowerCase().includes(language)
-        );
+        // let objectVoice = availableVoices.find((item) =>
+        //     item.language.toLowerCase().includes(language)
+        // );
         Speech.speak(text);
     };
 
@@ -104,16 +105,40 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
             const { uri } = await FileSystem.getInfoAsync(
                 recording.current.getURI()
             );
-            const formData = new FormData();
-            formData.append('file', {
-                uri,
-                type: 'audio/m4a',
-                name: `${Date.now()}.m4a`,
-            });
-            formData.append('textLang', selectedTextLang);
-            formData.append('translateLang', selectedTranslateLang);
-            const { data } = await apiTranslator.speechToText(formData);
-            FileSystem.deleteAsync(uri);
+            try {
+                const {
+                    sound,
+                    status,
+                } = await recording.current.createNewLoadedSoundAsync(
+                    {
+                        isLooping: true,
+                        isMuted: true,
+                        volume: 1,
+                    },
+                    (t) => {
+                        if (t.isLoaded) {
+                            console.log(t);
+                        }
+                    }
+                );
+                sound.playAsync();
+                sound.setPositionAsync(0);
+                sound.setRateAsync(3, false);
+            } catch (error) {
+                console.log(error);
+                // An error occurred!
+            }
+            console.log('end');
+            // const formData = new FormData();
+            // formData.append('file', {
+            //     uri,
+            //     type: 'audio/mp4',
+            //     name: `${Date.now()}.mp4`,
+            // });
+            // formData.append('textLang', selectedTextLang);
+            // formData.append('translateLang', selectedTranslateLang);
+            // const { data } = await apiTranslator.speechToText(formData);
+            // FileSystem.deleteAsync(uri);
         } catch (error) {
             console.log('getRecording transcription', error);
         }
@@ -135,13 +160,15 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
             allowsRecordingIOS: true,
             interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
             playsInSilentModeIOS: true,
+            shouldDuckAndroid: true,
             interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
             playThroughEarpieceAndroid: true,
         });
         const record = new Audio.Recording();
         try {
+            await record.setOnRecordingStatusUpdate((t) => console.log(t));
             await record.prepareToRecordAsync(
-                Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+                RECORDING_OPTIONS_PRESET_HIGH_QUALITY
             );
             await record.startAsync();
         } catch (error) {
@@ -155,6 +182,7 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
             Permissions.AUDIO_RECORDING
         );
         if (status !== 'granted') return;
+        console.log(isRecording);
         if (isRecording) {
             stopRecording();
         } else {

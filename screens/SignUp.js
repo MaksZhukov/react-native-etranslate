@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { TextInput } from 'react-native';
 import {
     Container,
     Text,
@@ -9,11 +8,16 @@ import {
     Input,
     Icon,
     View,
-    Content,
+    Toast,
 } from 'native-base';
+import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
+import { inject, observer } from 'mobx-react';
+import api from '../api';
 import i18n from '../locale';
+import { setItemsToAsyncStorage } from '../helpers';
 
-const SignUp = ({ navigation }) => {
+const SignUp = ({ navigation, user }) => {
     let [email, setEmail] = useState('');
     let [password, setPassword] = useState('');
     useLayoutEffect(() => {
@@ -30,9 +34,9 @@ const SignUp = ({ navigation }) => {
             ),
         });
     }, [navigation]);
-    const handlePressSignInWith = (site) => async () => {
+    const handlePressSignUpWith = (site) => async () => {
         let redirectUrl = await Linking.getInitialURL();
-        let authUrl = `${api.defaults.baseURL}/auth/${site}`;
+        let authUrl = `${api.defaults.baseURL}/auth/${site}?redirectTo=${redirectUrl}`;
         try {
             let authResult = await WebBrowser.openAuthSessionAsync(
                 authUrl,
@@ -44,6 +48,11 @@ const SignUp = ({ navigation }) => {
             setItemsToAsyncStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
             navigation.navigate('Translator');
+            Toast.show({
+                text: i18n.t('entrySuccess'),
+                type: 'success',
+                textStyle: { textAlign: 'center' },
+            });
         } catch (err) {
             console.log('ERROR:', err);
         }
@@ -86,7 +95,7 @@ const SignUp = ({ navigation }) => {
                     alignItems: 'center',
                 }}>
                 <Button
-                    onPress={handlePressSignInWith('google')}
+                    onPress={handlePressSignUpWith('google')}
                     style={{ margin: 5 }}
                     rounded
                     transparent
@@ -94,7 +103,7 @@ const SignUp = ({ navigation }) => {
                     <Icon name='logo-google' />
                 </Button>
                 <Button
-                    onPress={handlePressSignInWith('yandex')}
+                    onPress={handlePressSignUpWith('yandex')}
                     style={{ margin: 5 }}
                     rounded
                     transparent
@@ -106,4 +115,4 @@ const SignUp = ({ navigation }) => {
     );
 };
 
-export default SignUp;
+export default inject('user')(observer(SignUp));

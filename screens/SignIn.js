@@ -11,12 +11,11 @@ import {
     Input,
     Icon,
     View,
-    Content,
+    Toast,
 } from 'native-base';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
 import api from '../api';
-import apiUser from '../api/user';
 import i18n from '../locale';
 import { setItemsToAsyncStorage } from '../helpers';
 
@@ -52,6 +51,11 @@ const SignIn = ({ user, navigation }) => {
             setItemsToAsyncStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
             navigation.navigate('Translator');
+            Toast.show({
+                text: i18n.t('entrySuccess'),
+                type: 'success',
+                textStyle: { textAlign: 'center' },
+            });
         } catch (err) {
             console.log('ERROR:', err);
         }
