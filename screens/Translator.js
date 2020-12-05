@@ -1,39 +1,16 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Container, Button, Icon, Textarea, Picker, View } from 'native-base';
-import { Audio } from 'expo-av';
-import * as Permissions from 'expo-permissions';
 import * as Speech from 'expo-speech';
-import * as FileSystem from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 import apiTranslator from '../api/translator';
 import i18n from '../locale';
 import { debounce } from '../helpers';
 import { LANGUAGES } from '../constants';
-import { RECORDING_OPTIONS_PRESET_HIGH_QUALITY } from 'expo-av/build/Audio';
-
-const recordingOptions = {
-    android: {
-        extension: '.webm',
-        outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_WEBM,
-        audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
-        sampleRate: 44100,
-        numberOfChannels: 1,
-        bitRate: 128000,
-    },
-    ios: {
-        extension: '.wav',
-        audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
-        sampleRate: 44100,
-        numberOfChannels: 1,
-        bitRate: 128000,
-        linearPCMBitDepth: 16,
-        linearPCMIsBigEndian: false,
-        linearPCMIsFloat: false,
-    },
-};
 
 const Translator = ({ user: { locale }, navigation, userDictionary }) => {
     let [text, setText] = useState('');
+    let [loadingImageRecognition, setLoadingImageRecognition] = useState(false);
     let [selectedTextLang, setSelectedTextLang] = useState(LANGUAGES[1].abbr);
     let [selectedTranslateLang, setSelectedTranslateLang] = useState(
         LANGUAGES[0].abbr
@@ -41,8 +18,6 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
     let [loading, setLoading] = useState(false);
     let [translation, setTranslation] = useState('');
     let [availableVoices, setAvailableVoices] = useState([]);
-    let [isRecording, setIsRecording] = useState(false);
-    const recording = useRef(null);
     let userDirectoryItemByCurrentTranslation = userDictionary.items.find(
         (item) =>
             item.text === text &&
@@ -100,93 +75,34 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
         Speech.speak(text);
     };
 
-    const getRecordingTranscription = async () => {
-        try {
-            const { uri } = await FileSystem.getInfoAsync(
-                recording.current.getURI()
-            );
-            try {
-                const {
-                    sound,
-                    status,
-                } = await recording.current.createNewLoadedSoundAsync(
-                    {
-                        isLooping: true,
-                        isMuted: true,
-                        volume: 1,
-                    },
-                    (t) => {
-                        if (t.isLoaded) {
-                            console.log(t);
-                        }
-                    }
-                );
-                sound.playAsync();
-                sound.setPositionAsync(0);
-                sound.setRateAsync(3, false);
-            } catch (error) {
-                console.log(error);
-                // An error occurred!
+    const handlePressImageRecognition = async () => {
+        const {
+            status,
+        } = await ImagePicker.requestCameraRollPermissionsAsync();
+        if (status === 'granted') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            if (!result.cancelled) {
+                const formData = new FormData();
+                let nameArray = result.uri.split('/');
+                formData.append('image', {
+                    uri: result.uri,
+                    type: 'multipart/form-data',
+                    name: nameArray[nameArray.length - 1],
+                });
+                formData.append('textLang', selectedTextLang);
+                formData.append('translateLang', selectedTranslateLang);
+                setLoadingImageRecognition(true);
+                const { data } = await apiTranslator.translateByImage(formData);
+                setText(data.text);
+                setTranslation(data.translation);
+                setLoadingImageRecognition(false);
             }
-            console.log('end');
-            // const formData = new FormData();
-            // formData.append('file', {
-            //     uri,
-            //     type: 'audio/mp4',
-            //     name: `${Date.now()}.mp4`,
-            // });
-            // formData.append('textLang', selectedTextLang);
-            // formData.append('translateLang', selectedTranslateLang);
-            // const { data } = await apiTranslator.speechToText(formData);
-            // FileSystem.deleteAsync(uri);
-        } catch (error) {
-            console.log('getRecording transcription', error);
-        }
-    };
-
-    const stopRecording = async () => {
-        setIsRecording(false);
-        try {
-            await recording.current.stopAndUnloadAsync();
-            getRecordingTranscription();
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const startRecording = async () => {
-        setIsRecording(true);
-        await Audio.setAudioModeAsync({
-            allowsRecordingIOS: true,
-            interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-            playsInSilentModeIOS: true,
-            shouldDuckAndroid: true,
-            interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-            playThroughEarpieceAndroid: true,
-        });
-        const record = new Audio.Recording();
-        try {
-            await record.setOnRecordingStatusUpdate((t) => console.log(t));
-            await record.prepareToRecordAsync(
-                RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-            );
-            await record.startAsync();
-        } catch (error) {
-            stopRecording();
-        }
-        recording.current = record;
-    };
-
-    const handlePressRecordVoice = async () => {
-        const { status } = await Permissions.askAsync(
-            Permissions.AUDIO_RECORDING
-        );
-        if (status !== 'granted') return;
-        console.log(isRecording);
-        if (isRecording) {
-            stopRecording();
-        } else {
-            startRecording();
         }
     };
 
@@ -247,7 +163,7 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
                     <Icon name='volume-high' />
                 </Button>
                 <Button
-                    onPress={handlePressRecordVoice}
+                    onPress={handlePressImageRecognition}
                     style={{
                         margin: 5,
                         width: 52,
@@ -258,12 +174,13 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
                     rounded
                     transparent
                     bordered>
-                    <Icon name={isRecording ? 'mic' : 'mic-off'} />
+                    <Icon name='image' />
                 </Button>
             </View>
             <Textarea
                 style={{ flex: 4 }}
-                value={text}
+                disabled={loadingImageRecognition}
+                value={loadingImageRecognition ? '...' : text}
                 onChangeText={handleChangeText}
                 bordered
                 placeholder={i18n.t('text')}></Textarea>
@@ -311,7 +228,13 @@ const Translator = ({ user: { locale }, navigation, userDictionary }) => {
             </View>
             <Textarea
                 style={{ flex: 4 }}
-                value={loading ? `${translation}...` : translation}
+                value={
+                    loadingImageRecognition
+                        ? '...'
+                        : loading
+                        ? `${translation}...`
+                        : translation
+                }
                 bordered
                 disabled
                 placeholder={i18n.t('translation')}></Textarea>
