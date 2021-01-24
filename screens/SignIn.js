@@ -19,7 +19,7 @@ import api from '../api';
 import i18n from '../locale';
 import { setItemsToAsyncStorage } from '../helpers';
 
-const SignIn = ({ user, navigation }) => {
+const SignIn = ({ user, navigation, userDictionary }) => {
     let [email, setEmail] = useState('');
     let [password, setPassword] = useState('');
 
@@ -50,6 +50,7 @@ const SignIn = ({ user, navigation }) => {
             } = Linking.parse(authResult.url);
             setItemsToAsyncStorage({ accessToken, expiresIn, refreshToken });
             await user.checkToken();
+            await userDictionary.getUserDictionaryItems();
             navigation.navigate('Translator');
             Toast.show({
                 text: i18n.t('entrySuccess'),
@@ -79,8 +80,9 @@ const SignIn = ({ user, navigation }) => {
                     />
                 </Item>
                 <Button
-                    onPress={() => {
-                        user.signIn(email, password);
+                    onPress={async () => {
+                        await user.signIn(email, password);
+                        await userDictionary.getUserDictionaryItems();
                     }}
                     primary
                     block>
@@ -118,4 +120,4 @@ const SignIn = ({ user, navigation }) => {
     );
 };
 
-export default inject('user')(observer(SignIn));
+export default inject('user', 'userDictionary')(observer(SignIn));
